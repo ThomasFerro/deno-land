@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from '../deps/tests.ts';
 
-import { initiatePark, CannotBreed } from './park.ts';
+import { initiatePark, CannotBreed, CannotFeed } from './park.ts';
 import { Dinosaur } from './dinosaur.ts';
 
 Deno.test('Initial park with two dinosaurs', () => {
@@ -36,21 +36,28 @@ Deno.test('Cannot breed with a dinosaur not in the park', () => {
     );
 });
 
-/*
-TODOs:
-- Feed
-- Out of boond
-*/
-
 Deno.test('Initial park with half-fed dinosaurs', () => {
     const park = initiatePark();
 
     assertEquals(park?.dinosaurs[0]?.hunger, 0.5);
     assertEquals(park?.dinosaurs[1]?.hunger, 0.5);
-})
+});
 
-// Deno.test('Feed a dinosaur', () => {
-//     const park = initiatePark();
+Deno.test('Feed a dinosaur', () => {
+    let park = initiatePark();
 
-//     park.feed(park.dinosaurs[0])
-// });
+    park = park.feed(park.dinosaurs[0]);
+
+    assertEquals(park?.dinosaurs[0]?.hunger, 1);
+});
+
+Deno.test('Cannot feed a dinosaur not in the park', () => {
+    let park = initiatePark();
+
+    assertThrows(
+        () => {
+            park.feed(new Dinosaur('Samuel'));
+        },
+        CannotFeed,
+    );
+});
