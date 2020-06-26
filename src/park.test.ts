@@ -1,6 +1,7 @@
-import { assertEquals } from '../deps/tests.ts';
+import { assertEquals, assertThrows } from '../deps/tests.ts';
 
-import { initiatePark } from './park.ts';
+import { initiatePark, CannotBreed } from './park.ts';
+import { Dinosaur } from './dinosaur.ts';
 
 Deno.test('Initial park with two dinosaurs', () => {
     const initialPark = initiatePark();
@@ -8,11 +9,6 @@ Deno.test('Initial park with two dinosaurs', () => {
     assertEquals(initialPark?.dinosaurs?.length, 2);
 });
 
-/*
-TODO:
-- Breed two dino
-- Error if one of the dino is not in the park
-*/
 Deno.test('Breed two dinosaurs', () => {
     let park = initiatePark();
 
@@ -20,4 +16,22 @@ Deno.test('Breed two dinosaurs', () => {
 
     assertEquals(park?.dinosaurs?.length, 3);
     assertEquals(park?.dinosaurs[2]?.name, 'Billy');
+});
+
+Deno.test('Cannot breed with a dinosaur not in the park', () => {
+    const park = initiatePark();
+
+    assertThrows(
+        () => {
+            park.breed(park.dinosaurs[0], new Dinosaur('Bob'), 'Billy');
+        },
+        CannotBreed,
+    );
+
+    assertThrows(
+        () => {
+            park.breed(new Dinosaur('Bob'), park.dinosaurs[1], 'Billy');
+        },
+        CannotBreed,
+    );
 });

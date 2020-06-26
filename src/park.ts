@@ -1,5 +1,7 @@
 import { Dinosaur } from './dinosaur.ts';
 
+export class CannotBreed extends Error {}
+
 export class Park {
     dinosaurs: Dinosaur[];
 
@@ -8,6 +10,12 @@ export class Park {
     }
 
     breed(firstParent: Dinosaur, secondParent: Dinosaur, name: string = ''): Park {
+        if (this.dinosaurs.indexOf(firstParent) === -1
+            || this.dinosaurs.indexOf(secondParent) === -1) {
+
+            throw new CannotBreed('One of the parent is not in the park');
+        }
+
         return new Park([
             ...this.dinosaurs,
             new Dinosaur(name),
