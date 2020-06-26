@@ -6,6 +6,13 @@ export class Park {
     constructor(dinosaurs: Dinosaur[] = []) {
         this.dinosaurs = dinosaurs;
     }
+
+    breed(firstParent: Dinosaur, secondParent: Dinosaur, name: string = ''): Park {
+        return new Park([
+            ...this.dinosaurs,
+            new Dinosaur(name),
+        ]);
+    }
 }
 
 export const initiatePark = () => {
