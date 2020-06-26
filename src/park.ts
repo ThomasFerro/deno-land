@@ -24,6 +24,8 @@ export class Park {
 }
 
 export const initiatePark = () => {
-    const newDinosaur = new Dinosaur();
-    return new Park([newDinosaur, newDinosaur]);
+    return new Park([
+        new Dinosaur('', 0.5),
+        new Dinosaur('', 0.5),
+    ]);
 };

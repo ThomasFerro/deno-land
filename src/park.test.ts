@@ -35,3 +35,22 @@ Deno.test('Cannot breed with a dinosaur not in the park', () => {
         CannotBreed,
     );
 });
+
+/*
+TODOs:
+- Feed
+- Out of boond
+*/
+
+Deno.test('Initial park with half-fed dinosaurs', () => {
+    const park = initiatePark();
+
+    assertEquals(park?.dinosaurs[0]?.hunger, 0.5);
+    assertEquals(park?.dinosaurs[1]?.hunger, 0.5);
+})
+
+// Deno.test('Feed a dinosaur', () => {
+//     const park = initiatePark();
+
+//     park.feed(park.dinosaurs[0])
+// });
