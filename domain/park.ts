@@ -22,7 +22,9 @@ export class Park {
       this.dinosaurs.indexOf(firstParent) === -1 ||
       this.dinosaurs.indexOf(secondParent) === -1
     ) {
-      throw new CannotBreedDinosaursNotInPark("One of the parent is not in the park");
+      throw new CannotBreedDinosaursNotInPark(
+        "One of the parent is not in the park",
+      );
     }
 
     if (
@@ -51,7 +53,7 @@ export class Park {
       throw new CannotFeedDeadDinosaur("This dinosaur is dead");
     }
 
-    dinosaurs[dinosaurToFeedIndex].hunger = 1;
+    dinosaurs[dinosaurToFeedIndex].hunger = 10;
 
     return new Park(dinosaurs);
   }
@@ -71,11 +73,34 @@ export class Park {
       ...dinosaurs.slice(dinosaurToEuthanizeIndex + 1),
     ]);
   }
+
+  passTime(): Park {
+    return new Park(this.dinosaurs.map(
+      (dinosaur: Dinosaur): Dinosaur => {
+        if (!dinosaur.isAlive) {
+          return dinosaur;
+        }
+        const newDinosaur = new Dinosaur(
+          dinosaur.name,
+          dinosaur.hunger - 1,
+          dinosaur.isAlive,
+        );
+        if (newDinosaur.hunger <= 0) {
+          newDinosaur.isAlive = false;
+        }
+        return newDinosaur;
+      },
+    ));
+  }
+
+  get gameOver(): boolean {
+    return !(this.dinosaurs.some((dinosaur) => dinosaur.isAlive));
+  }
 }
 
 export const initiatePark = () => {
   return new Park([
-    new Dinosaur("", 0.5),
-    new Dinosaur("", 0.5),
+    new Dinosaur("", 5),
+    new Dinosaur("", 5),
   ]);
 };
