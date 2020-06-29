@@ -183,5 +183,3 @@ Deno.test("Game over when no dinosaurs are alive - from starting a game with no 
   ]);
   assertEquals(park?.gameOver, true);
 });
-
-// TODO: No action possible when the game is over

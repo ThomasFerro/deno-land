@@ -5,3 +5,4 @@
 ## Development workflow
 
 - Run the tests: `deno test .`;
+- Run the application (CLI): `deno run index.ts`;
