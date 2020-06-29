@@ -4,4 +4,4 @@
 
 ## Development workflow
 
-- Run the tests: `deno test src/`;
+- Run the tests: `deno test .`;
