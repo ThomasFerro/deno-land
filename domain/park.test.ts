@@ -61,3 +61,19 @@ Deno.test("Cannot feed a dinosaur not in the park", () => {
     CannotFeed,
   );
 });
+
+Deno.test("Euthanize a dinosaur", () => {
+  let park = initiatePark();
+
+  park = park.euthanize(park.dinosaurs[0]);
+
+  assertEquals(park?.dinosaurs?.length, 1);
+});
+
+Deno.test("Euthanize the last dinosaur", () => {
+  let park = initiatePark();
+
+  park = park.euthanize(park.dinosaurs[1]);
+
+  assertEquals(park?.dinosaurs?.length, 1);
+});

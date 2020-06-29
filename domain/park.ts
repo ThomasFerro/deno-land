@@ -41,6 +41,17 @@ export class Park {
 
     return new Park(dinosaurs);
   }
+
+  euthanize(dinosaur: Dinosaur): Park {
+    const dinosaurs = [...this.dinosaurs];
+
+    const dinosaurToEuthanizeIndex = dinosaurs.indexOf(dinosaur);
+
+    return new Park([
+      ...dinosaurs.slice(0, dinosaurToEuthanizeIndex),
+      ...dinosaurs.slice(dinosaurToEuthanizeIndex + 1),
+    ]);
+  }
 }
 
 export const initiatePark = () => {
