@@ -14,13 +14,15 @@ export class Park {
   }
 
   breed(
-    firstParent: Dinosaur,
-    secondParent: Dinosaur,
+    firstParentIndex: number,
+    secondParentIndex: number,
     name: string = "",
   ): Park {
+    const firstParent = this.dinosaurs[firstParentIndex];
+    const secondParent = this.dinosaurs[secondParentIndex];
     if (
-      this.dinosaurs.indexOf(firstParent) === -1 ||
-      this.dinosaurs.indexOf(secondParent) === -1
+      !firstParent ||
+      !secondParent
     ) {
       throw new CannotBreedDinosaursNotInPark(
         "One of the parent is not in the park",
@@ -40,16 +42,16 @@ export class Park {
     ]);
   }
 
-  feed(dinosaur: Dinosaur): Park {
+  feed(dinosaurToFeedIndex: number): Park {
     const dinosaurs = [...this.dinosaurs];
 
-    const dinosaurToFeedIndex = dinosaurs.indexOf(dinosaur);
+    const dinosaurToFeed = dinosaurs[dinosaurToFeedIndex];
 
-    if (dinosaurToFeedIndex === -1) {
+    if (!dinosaurToFeed) {
       throw new CannotFeedDinosaursNotInPark("The dinosaur is not in the park");
     }
 
-    if (!dinosaurs[dinosaurToFeedIndex].isAlive) {
+    if (!dinosaurToFeed.isAlive) {
       throw new CannotFeedDeadDinosaur("This dinosaur is dead");
     }
 
@@ -58,18 +60,17 @@ export class Park {
     return new Park(dinosaurs);
   }
 
-  euthanize(dinosaur: Dinosaur): Park {
+  euthanize(dinosaurToEuthanizeIndex: number): Park {
     const dinosaurs = [...this.dinosaurs];
 
-    const dinosaurToEuthanizeIndex = dinosaurs.indexOf(dinosaur);
-
-    if (dinosaurToEuthanizeIndex === -1) {
+    const dinosaurToEuthanize = dinosaurs[dinosaurToEuthanizeIndex];
+    if (!dinosaurToEuthanize) {
       throw new CannotEuthanize("The dinosaur is not in the park");
     }
 
     return new Park([
       ...dinosaurs.slice(0, dinosaurToEuthanizeIndex),
-      new Dinosaur(dinosaur.name, dinosaur.hunger, false),
+      new Dinosaur(dinosaurToEuthanize.name, dinosaurToEuthanize.hunger, false),
       ...dinosaurs.slice(dinosaurToEuthanizeIndex + 1),
     ]);
   }

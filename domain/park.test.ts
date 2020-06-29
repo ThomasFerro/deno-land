@@ -20,7 +20,7 @@ Deno.test("Initial park with two dinosaurs", () => {
 Deno.test("Breed two dinosaurs", () => {
   let park = initiatePark();
 
-  park = park.breed(park.dinosaurs[0], park.dinosaurs[1], "Billy");
+  park = park.breed(0, 1, "Billy");
 
   assertEquals(park?.dinosaurs?.length, 3);
   assertEquals(park?.dinosaurs[2]?.name, "Billy");
@@ -31,14 +31,14 @@ Deno.test("Cannot breed with a dinosaur not in the park", () => {
 
   assertThrows(
     () => {
-      park.breed(park.dinosaurs[0], new Dinosaur("Bob"), "Billy");
+      park.breed(0, 12, "Billy");
     },
     CannotBreedDinosaursNotInPark,
   );
 
   assertThrows(
     () => {
-      park.breed(new Dinosaur("Bob"), park.dinosaurs[1], "Billy");
+      park.breed(12, 1, "Billy");
     },
     CannotBreedDinosaursNotInPark,
   );
@@ -54,7 +54,7 @@ Deno.test("Initial park with half-fed dinosaurs", () => {
 Deno.test("Feed a dinosaur", () => {
   let park = initiatePark();
 
-  park = park.feed(park.dinosaurs[0]);
+  park = park.feed(0);
 
   assertEquals(park?.dinosaurs[0]?.hunger, 10);
 });
@@ -64,7 +64,7 @@ Deno.test("Cannot feed a dinosaur not in the park", () => {
 
   assertThrows(
     () => {
-      park.feed(new Dinosaur("Samuel"));
+      park.feed(42);
     },
     CannotFeedDinosaursNotInPark,
   );
@@ -73,7 +73,7 @@ Deno.test("Cannot feed a dinosaur not in the park", () => {
 Deno.test("Euthanize a dinosaur", () => {
   let park = initiatePark();
 
-  park = park.euthanize(park.dinosaurs[0]);
+  park = park.euthanize(0);
 
   assertEquals(park.dinosaurs[0].isAlive, false);
 });
@@ -81,7 +81,7 @@ Deno.test("Euthanize a dinosaur", () => {
 Deno.test("Euthanize the last dinosaur", () => {
   let park = initiatePark();
 
-  park = park.euthanize(park.dinosaurs[1]);
+  park = park.euthanize(1);
 
   assertEquals(park.dinosaurs[1].isAlive, false);
 });
@@ -91,7 +91,7 @@ Deno.test("Cannot euthanize a dinosaur not in the park", () => {
 
   assertThrows(
     () => {
-      park.euthanize(new Dinosaur("Michael"));
+      park.euthanize(7);
     },
     CannotEuthanize,
   );
@@ -100,11 +100,11 @@ Deno.test("Cannot euthanize a dinosaur not in the park", () => {
 Deno.test("A dead dinosaur cannot be fed", () => {
   let park = initiatePark();
 
-  park = park.euthanize(park.dinosaurs[1]);
+  park = park.euthanize(1);
 
   assertThrows(
     () => {
-      park.feed(park.dinosaurs[1]);
+      park.feed(1);
     },
     CannotFeedDeadDinosaur,
   );
@@ -113,11 +113,11 @@ Deno.test("A dead dinosaur cannot be fed", () => {
 Deno.test("A dead dinosaur cannot be bred", () => {
   let park = initiatePark();
 
-  park = park.euthanize(park.dinosaurs[1]);
+  park = park.euthanize(1);
 
   assertThrows(
     () => {
-      park.breed(park.dinosaurs[0], park.dinosaurs[1]);
+      park.breed(0, 1);
     },
     CannotBreedDeadDinosaur,
   );
@@ -143,7 +143,7 @@ Deno.test("Dinosaurs starving over time", () => {
 
 Deno.test("Not reducing dead dino's hunger over time", () => {
   let park = initiatePark();
-  park = park.euthanize(park.dinosaurs[0]);
+  park = park.euthanize(0);
   for (let i = 0; i < 6; i++) {
     park = park.passTime();
   }
@@ -167,8 +167,8 @@ Deno.test("Game over when no dinosaurs are alive - from starvation", () => {
 
 Deno.test("Game over when no dinosaurs are alive - from euthanizing last dinosaur", () => {
   let park = initiatePark();
-  park = park.euthanize(park.dinosaurs[0]);
-  park = park.euthanize(park.dinosaurs[1]);
+  park = park.euthanize(0);
+  park = park.euthanize(1);
   assertEquals(park?.gameOver, true);
 });
 
