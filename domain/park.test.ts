@@ -1,6 +1,13 @@
 import { assertEquals, assertThrows } from "../deps/tests.ts";
 
-import { initiatePark, CannotBreed, CannotFeed, CannotEuthanize } from "./park.ts";
+import {
+  initiatePark,
+  CannotBreedDinosaursNotInPark,
+  CannotBreedDeadDinosaur,
+  CannotFeedDinosaursNotInPark,
+  CannotFeedDeadDinosaur,
+  CannotEuthanize,
+} from "./park.ts";
 import { Dinosaur } from "./dinosaur.ts";
 
 Deno.test("Initial park with two dinosaurs", () => {
@@ -25,14 +32,14 @@ Deno.test("Cannot breed with a dinosaur not in the park", () => {
     () => {
       park.breed(park.dinosaurs[0], new Dinosaur("Bob"), "Billy");
     },
-    CannotBreed,
+    CannotBreedDinosaursNotInPark,
   );
 
   assertThrows(
     () => {
       park.breed(new Dinosaur("Bob"), park.dinosaurs[1], "Billy");
     },
-    CannotBreed,
+    CannotBreedDinosaursNotInPark,
   );
 });
 
@@ -58,7 +65,7 @@ Deno.test("Cannot feed a dinosaur not in the park", () => {
     () => {
       park.feed(new Dinosaur("Samuel"));
     },
-    CannotFeed,
+    CannotFeedDinosaursNotInPark,
   );
 });
 
@@ -67,7 +74,7 @@ Deno.test("Euthanize a dinosaur", () => {
 
   park = park.euthanize(park.dinosaurs[0]);
 
-  assertEquals(park?.dinosaurs?.length, 1);
+  assertEquals(park.dinosaurs[0].isAlive, false);
 });
 
 Deno.test("Euthanize the last dinosaur", () => {
@@ -75,7 +82,7 @@ Deno.test("Euthanize the last dinosaur", () => {
 
   park = park.euthanize(park.dinosaurs[1]);
 
-  assertEquals(park?.dinosaurs?.length, 1);
+  assertEquals(park.dinosaurs[1].isAlive, false);
 });
 
 Deno.test("Cannot euthanize a dinosaur not in the park", () => {
@@ -86,5 +93,31 @@ Deno.test("Cannot euthanize a dinosaur not in the park", () => {
       park.euthanize(new Dinosaur("Michael"));
     },
     CannotEuthanize,
+  );
+});
+
+Deno.test("A dead dinosaur cannot be fed", () => {
+  let park = initiatePark();
+
+  park = park.euthanize(park.dinosaurs[1]);
+
+  assertThrows(
+    () => {
+      park.feed(park.dinosaurs[1]);
+    },
+    CannotFeedDeadDinosaur,
+  );
+});
+
+Deno.test("A dead dinosaur cannot be bred", () => {
+  let park = initiatePark();
+
+  park = park.euthanize(park.dinosaurs[1]);
+
+  assertThrows(
+    () => {
+      park.breed(park.dinosaurs[0], park.dinosaurs[1]);
+    },
+    CannotBreedDeadDinosaur,
   );
 });

@@ -1,7 +1,9 @@
 import { Dinosaur } from "./dinosaur.ts";
 
-export class CannotBreed extends Error {}
-export class CannotFeed extends Error {}
+export class CannotBreedDinosaursNotInPark extends Error {}
+export class CannotBreedDeadDinosaur extends Error {}
+export class CannotFeedDinosaursNotInPark extends Error {}
+export class CannotFeedDeadDinosaur extends Error {}
 export class CannotEuthanize extends Error {}
 
 export class Park {
@@ -20,7 +22,14 @@ export class Park {
       this.dinosaurs.indexOf(firstParent) === -1 ||
       this.dinosaurs.indexOf(secondParent) === -1
     ) {
-      throw new CannotBreed("One of the parent is not in the park");
+      throw new CannotBreedDinosaursNotInPark("One of the parent is not in the park");
+    }
+
+    if (
+      !firstParent.isAlive ||
+      !secondParent.isAlive
+    ) {
+      throw new CannotBreedDeadDinosaur("One of the parent is dead");
     }
 
     return new Park([
@@ -35,7 +44,11 @@ export class Park {
     const dinosaurToFeedIndex = dinosaurs.indexOf(dinosaur);
 
     if (dinosaurToFeedIndex === -1) {
-      throw new CannotFeed("The dinosaur is not in the park");
+      throw new CannotFeedDinosaursNotInPark("The dinosaur is not in the park");
+    }
+
+    if (!dinosaurs[dinosaurToFeedIndex].isAlive) {
+      throw new CannotFeedDeadDinosaur("This dinosaur is dead");
     }
 
     dinosaurs[dinosaurToFeedIndex].hunger = 1;
@@ -54,6 +67,7 @@ export class Park {
 
     return new Park([
       ...dinosaurs.slice(0, dinosaurToEuthanizeIndex),
+      new Dinosaur(dinosaur.name, dinosaur.hunger, false),
       ...dinosaurs.slice(dinosaurToEuthanizeIndex + 1),
     ]);
   }
