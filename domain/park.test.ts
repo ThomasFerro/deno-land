@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "../deps/tests.ts";
 
-import { initiatePark, CannotBreed, CannotFeed } from "./park.ts";
+import { initiatePark, CannotBreed, CannotFeed, CannotEuthanize } from "./park.ts";
 import { Dinosaur } from "./dinosaur.ts";
 
 Deno.test("Initial park with two dinosaurs", () => {
@@ -76,4 +76,15 @@ Deno.test("Euthanize the last dinosaur", () => {
   park = park.euthanize(park.dinosaurs[1]);
 
   assertEquals(park?.dinosaurs?.length, 1);
+});
+
+Deno.test("Cannot euthanize a dinosaur not in the park", () => {
+  let park = initiatePark();
+
+  assertThrows(
+    () => {
+      park.euthanize(new Dinosaur("Michael"));
+    },
+    CannotEuthanize,
+  );
 });

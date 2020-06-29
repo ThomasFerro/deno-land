@@ -2,6 +2,7 @@ import { Dinosaur } from "./dinosaur.ts";
 
 export class CannotBreed extends Error {}
 export class CannotFeed extends Error {}
+export class CannotEuthanize extends Error {}
 
 export class Park {
   dinosaurs: Dinosaur[];
@@ -46,6 +47,10 @@ export class Park {
     const dinosaurs = [...this.dinosaurs];
 
     const dinosaurToEuthanizeIndex = dinosaurs.indexOf(dinosaur);
+
+    if (dinosaurToEuthanizeIndex === -1) {
+      throw new CannotEuthanize("The dinosaur is not in the park");
+    }
 
     return new Park([
       ...dinosaurs.slice(0, dinosaurToEuthanizeIndex),
