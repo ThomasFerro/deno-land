@@ -36,7 +36,7 @@ export class Park {
 
     return new Park([
       ...this.dinosaurs,
-      new Dinosaur(name),
+      new Dinosaur(name, 5),
     ]);
   }
 
