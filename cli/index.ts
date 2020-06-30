@@ -15,7 +15,6 @@ const commands: Commands = {
       'Type B <first dino> <second dino> <name> to breed (eg: "B 0 1 Sam" to breed the first two dinosaurs and name the new one "Sam")',
     handler: (park: Park, payload: string): Park => {
       const [_, firstDeno, secondDeno, name] = payload.split(" ");
-      console.log("...", { firstDeno, secondDeno });
       return park.breed(
         Number(firstDeno),
         Number(secondDeno),
