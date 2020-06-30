@@ -12,3 +12,5 @@
 
 - Get park information: `curl http://localhost:8000`;
 - Feed a dinosaur: `curl -X POST http://localhost:8000/feed?dinosaur=0`;
+- Euthanize a dinosaur: `curl -X POST http://localhost:8000/euthanize?dinosaur=0`;
+- Breed dinosaurs: `curl -X POST "http://localhost:8000/breed?dinosaurs=0,1&name=Bob"`;
