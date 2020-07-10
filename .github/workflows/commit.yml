@@ -4,7 +4,9 @@ on: push
 
 jobs:
   test:
-    runs-on: hayd/alpine-deno:1.1.3
+    runs-on: ubuntu-latest
+    container:
+      image: hayd/alpine-deno:1.1.3
 
     steps:
     - uses: actions/checkout@v2
