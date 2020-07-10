@@ -1,0 +1,14 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: hayd/alpine-deno:1.1.3
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Runs a single command using the runners shell
+    - name: Run the tests
+      run: deno test .
