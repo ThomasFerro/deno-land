@@ -2,9 +2,10 @@ import { readLines } from "../deps/stdin.ts";
 import { Dinosaur } from "../domain/dinosaur.ts";
 import { Park } from "../domain/park.ts";
 
+type CommandHandler = (park: Park, payload: string) => Park;
 interface Command {
   message: string;
-  handler: (park: Park, payload: string) => Park;
+  handler: CommandHandler;
 }
 interface Commands {
   [commandName: string]: Command;
@@ -40,14 +41,7 @@ const commands: Commands = {
   },
 };
 
-const updateDisplay = (initialPark: Park) => {
-  let park = initialPark;
-  console.clear();
-  console.log("Welcome... to Deno Park !");
-  if (park.gameOver) {
-    console.log("You have no dinosaur left, game over !");
-    return;
-  }
+const displayDinosaurs = (park: Park) => {
   park.dinosaurs.forEach((dinosaur: Dinosaur, index: number) => {
     console.log(
       `[${index}] ${
@@ -55,9 +49,30 @@ const updateDisplay = (initialPark: Park) => {
       } ${dinosaur.name} - ${dinosaur.hunger}`,
     );
   });
+}
+
+const displayCommands = (commands: Commands) => {
   Object
     .values(commands)
     .forEach(({ message }) => console.log(message));
+}
+
+const updateDisplay = (park: Park) => {
+  console.clear();
+  console.log("Welcome... to Deno Park !");
+  if (park.gameOver) {
+    console.log("You have no dinosaur left, game over !");
+    return;
+  }
+  displayDinosaurs(park);
+  displayCommands(commands);
+};
+
+const getCommandHandler = (commands: Commands, command: any): CommandHandler | null => {
+  if (command && command.length > 0 && commands[command[0]]) {
+    return commands[command[0]].handler
+  }
+  return null;
 };
 
 export const initiateCli = async (park: Park) => {
@@ -70,9 +85,10 @@ export const initiateCli = async (park: Park) => {
 
   for await (const command of readLines(Deno.stdin)) {
     let error = null;
-    if (command && command.length > 0 && commands[command[0]]) {
+    const commandHandler = getCommandHandler(commands, command);
+    if (commandHandler) {
       try {
-        park = commands[command[0]].handler(park, command);
+        park = commandHandler(park, command);
       } catch (e) {
         error = e.message;
       }
